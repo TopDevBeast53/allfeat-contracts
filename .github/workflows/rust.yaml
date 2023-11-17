@@ -1,0 +1,42 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Run tests in examples
+      run: |
+        for example in examples/*/; do
+          pushd "$example"
+          cargo test
+          popd
+        done
+
+    - name: Check code formatting
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: -- --check
+
+    - name: Lint with clippy
+      uses: actions-rs/clippy-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build
+      run: cargo build --verbose
