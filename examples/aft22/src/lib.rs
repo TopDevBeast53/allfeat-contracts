@@ -32,10 +32,10 @@ pub mod my_aft22 {
     fn _before_token_transfer(
         &mut self,
         _from: Option<&AccountId>,
-        to: Option<&AccountId>,
+        _to: Option<&AccountId>,
         _amount: &Balance,
     ) -> Result<(), AFT22Error> {
-        if to == Some(&self.hated_storage.hated_account) {
+        if _to == Some(&self.hated_storage.hated_account) {
             return Err(AFT22Error::Custom(String::from("I hate this account!")));
         }
         Ok(())
